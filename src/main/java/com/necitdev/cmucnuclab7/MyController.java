@@ -21,6 +21,7 @@ public class MyController {
 
         view.getPowerOnBtn().setOnAction(e -> powerOnOf());
         view.getStartBtn().setOnAction(e -> startProcess());
+        view.getStopBtn().setOnAction(e -> stopProcess());
     }
 
     private void tick() {
@@ -34,11 +35,24 @@ public class MyController {
         updateUI();
     }
 
-    private void startProcess() {
+    private void stopProcess() {
+        myModel.handleEvent(MyEvent.STOP_BUTTON_CLICKED);
+        if (myModel.getState() == MyState.PAUSED){
+            timeline.pause();
+        }else if (myModel.getState() == MyState.READY){
+            timeline.stop();
+            myModel.setSecondsLeft(0);
+        }
+        updateUI();
+    }
 
+    private void startProcess() {
+        boolean isPauseState = myModel.getState() == MyState.PAUSED;
         myModel.handleEvent(MyEvent.START_CLICKED);
         if (myModel.getState() == MyState.HEATING) {
-            myModel.setSecondsLeft(5);
+            if (!isPauseState) {
+                myModel.setSecondsLeft(Integer.parseInt(view.getTimerTextField().getText()));
+            }
             timeline.play();
         }
         updateUI();

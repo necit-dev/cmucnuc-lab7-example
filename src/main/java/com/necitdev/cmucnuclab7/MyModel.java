@@ -7,7 +7,6 @@ public class MyModel {
     public int getSecondsLeft() {return secondsLeft;}
     public void setSecondsLeft(int secondsLeft) {this.secondsLeft = secondsLeft;}
 
-
     public MyState getState() {
         return state;
     }
@@ -27,6 +26,7 @@ public class MyModel {
                 if (e == MyEvent.TIMES_UP) state = MyState.FINISHED;
             }
             case PAUSED -> {
+                if (e == MyEvent.START_CLICKED) state = MyState.HEATING;
                 if (e == MyEvent.STOP_BUTTON_CLICKED) state = MyState.READY;
                 if (e == MyEvent.POWER_OFF_CLICKED) microwaveOff();
             }
@@ -39,6 +39,7 @@ public class MyModel {
 
             }
         }
+        System.out.println(state);
         return state;
     }
     private void microwaveOff() {
